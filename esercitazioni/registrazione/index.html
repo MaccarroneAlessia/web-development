@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="IT">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form di registrazione</title>
+</head>
+<body>
+    <table align="center">
+        <td>
+            <table align="center">
+                <tr><!-- TABLE ROW: sono le righe ennesime-->
+                    <th colspan="2" align="left"><!-- TABLE HEADER : sono le colonne (come td TABLE DATA ma di intestazione tipo) ennesime della riga ennesima che li contiene-->
+                        <!-- colspan per unire le righe e rowspan per unire le colonne-->
+                        <!--align serve per allineare il testo in un verso-->
+                        <h3>Registrazione utente</h3>
+                    </th>
+                </tr>
+
+                <tr>
+                    <td align="left">
+                        Indirizzo email
+                    </td>
+                    <td></td>
+                    <td align="left" colspan="2">
+                        Conferma indirizzo e-mail
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="left">
+                        <form>  
+                            <input type=”email” name=”email” placeholder="Email" size=36/>
+                        </form>                 
+                    </td>
+                    <td></td>
+                    <td align="left" colspan="2">
+                        <form>  
+                            <input type=”email” name=”emailconf” placeholder="Email" size=36/>
+                        </form>  
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="left">
+                        Password
+                    </td>
+                    <td></td>
+                    <td align="left">
+                        Conferma Password
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="left">
+                        <form>  
+                            <input type=”password” name=”pass” placeholder="Password" size=36/>
+                        </form>  
+                    </td>
+                    <td></td>
+                    <td align="left">
+                        <form>  
+                            <input type=”password” name=”passconf” placeholder="Password" size=36/>
+                        </form>  
+                    </td>
+                </tr>
+            </table>
+            
+            <!-- linea-->
+            <hr color="red">
+            <br>
+
+            <table align="center">
+                <tr>
+                    <td align="left">
+                        Nome
+                    </td>
+                    <td></td>
+                    <td align="left">
+                        Secondo Nome
+                    </td>
+                    <td></td>
+                    <td align="left">
+                        Cognome
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="left">
+                        <form>  
+                            <input type=”text” name=”nome” placeholder="Nome" size=22/>
+                        </form>  
+                    </td>
+                    <td></td>
+                    <td align="left">
+                        <form>  
+                            <input type=”text” name=”secondoNome” placeholder="Secondo nome" size=22/>
+                        </form>  
+                    </td>
+                    <td></td>
+                    <td align="left">
+                        <form>  
+                            <input type=”text” name=”cognome” placeholder="Cognome" size=22/>
+                        </form>  
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="left">
+                        Sesso
+                    </td>
+                    <td></td>
+                    <td colspan="3">
+                        Città ed indirizzo
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="left">
+                        <select name="cars" id="cars">
+                            <option value="m" size="31">Maschio</option>
+                            <option value="f" size="31">Femmina</option>
+                            <option value="b" size="31">Preferisco non specificarlo</option>
+                        </select>
+                    </td>
+                    <td></td>
+                    <td colspan="3">
+                        <form width="15%">  
+                            <input type=”text” name=”ind” placeholder="Citta e Indirizzo" size=50/>
+                        </form>  
+                    </td>
+                </tr>
+            </table>
+
+            <!-- linea-->
+            <hr color="red">
+            <br>
+
+            <table>
+                <tr>
+                    <td align="left">
+                        Interessi
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td align="left">
+                        Sistema utilizzato
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table border="1" width="275">
+                            <td align="left">
+                                <form>
+                                    <input type="checkbox" name="game" value="game">
+                                    <label for="game"> Videogame</label><br><!--label si usa per l'etichetta dell'input-->
+                                    <input type="checkbox" name="arte" value="arte">
+                                    <label for="arte"> Arte</label><br>
+                                    <input type="checkbox" name="foto" value="foto" checked>
+                                    <label for="foto"> Fotografia</label><br>
+                                    <input type="checkbox" name="alcool" value="alcool">
+                                    <label for="alcool"> Alcool</label><br>
+                                </form>  
+                            </td>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <table border="1" width="275">
+                            <td align="left">
+                                <form id="sist"> 
+                                    <input type="radio" name="sistema" value="windows">
+                                    <label for="windows"> Microsoft Windows</label><br>
+                                    <input type="radio" name="sistema" value="linux">
+                                    <label for="linux"> Linux</label><br>
+                                    <input type="radio" name="sistema" value="mac" checked>
+                                    <label for="mac"> MacOS</label><br>
+                                    <input type="radio" name="sistema" value="dos">
+                                    <label for="dos"> Microsoft DOS</label>
+                                    <!--<textarea rows="4" cols="50" name="comment" form="sist"></textarea>-->
+                                </form>  
+                            </td>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- linea-->
+            <hr color="red">
+            <br>
+
+            <table align="center">
+                <tr>
+                    <td>
+                        Accetti le condizioni?
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <table align="center">
+                <tr>
+                    <td>
+                        <input type="radio" name="accetto" />
+                        <label for="Accetto"> Accetto</label>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <table  align="right">
+                <tr>
+                    <td>
+                        <input type="submit" value="Registrati">
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </table>
+</body>
+</html>
