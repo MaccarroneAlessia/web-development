@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Box con angoli rossi</title>
+
+	<!--Gli pseudo-elementi in CSS consentono di inserire contenuti in una pagina senza che sia necessario che siano nell'HTML. 
+		Mentre il risultato finale non è effettivamente nel DOM, appare sulla pagina come se lo fosse, e sarebbe essenzialmente così-->
+	<style>
+        body, html, *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+		.box1, .box2 {
+			display: inline-block;
+			padding: 10px;
+			position: relative;
+		}
+
+        .box1 .box2 .box-content{
+			display: inline-block;
+			border: 2px solid black;
+			position: relative;
+			
+		}
+		
+		.box1:before,
+		.box1:after {
+			content: '';
+			position: absolute;
+			width: 50px;
+			height: 50px;
+			border: 2px solid red;
+		}
+		
+		.box1:before {
+			top: 10px;
+			left: 10px;
+            border-bottom: none;
+			border-right: none;
+		}
+		
+		.box1:after {
+			bottom: 10px;
+			right: 10px;
+            border-top: none;
+			border-left: none;
+		}
+
+        .box2:before,
+		.box2:after {
+			content: '';
+			position: absolute;
+			width: 50px;
+			height: 50px;
+			border: 2px solid red;
+		}
+		
+		.box2:before {
+			top: 96%;
+			left: -3px;
+            border-top: none;
+			border-right: none;
+		}
+		
+		.box2:after {
+			bottom: 96%;
+			right: -3px;
+            border-bottom: none;
+			border-left: none;
+		}
+		
+		.box-content img {
+			max-width: 100%;
+			height: auto;
+		}
+		
+	</style>
+</head>
+<body>
+	<center><div class="box1" >
+        <div class="box2">
+            <div class="box-content">
+                <!-- Inserisci qui il tuo contenuto -->
+                <!--<img src="https://th.bing.com/th/id/R.7a7aefe438d4b900601d32f67def114b?rik=ZaeMZ9lUS173hg&riu=http%3a%2f%2f2.bp.blogspot.com%2f-20ysIR63s04%2fUDY9kQdbysI%2fAAAAAAAAIIQ%2fsH7-sfvNBpY%2fs1600%2fSuper%2bMario%2bWallpapers%2b1.jpg&ehk=KuxwAemdwDIKx2%2bE1g67CIf3NfkmBvGnrbU44P%2fKIoQ%3d&risl=&pid=ImgRaw&r=0" >-->
+                <img src="https://th.bing.com/th/id/R.63f7aad8487837492123d7d17b9f6816?rik=I4XMpBkBGNIlng&riu=http%3a%2f%2fsickr.files.wordpress.com%2f2012%2f10%2fsuper_mario_3d_land_wallpaper.jpg&ehk=l7QJvoa6jw%2b29%2f7%2b%2f0XqCG4ussHIFQsZN%2buD%2bJnBmR0%3d&risl=&pid=ImgRaw&r=0">
+            </div>
+        </div>
+	</div></center> 
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminale Linux</title>
+
+    <script src="https://kit.fontawesome.com/16585184a6.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+
+    <style>
+        /* Icone prese da https://boxicons.com/
+           <box-icon type='solid' name='x-circle'></box-icon> -> x cerchio - x-circle
+           -> cerchio meno - minus-circle
+           <box-icon name='square'></box-icon> -> quadrato ma senza cerchio :c
+        */
+
+        body, html, *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            background-color: #F2EDD0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .terminale{
+            background-color: rgba(26, 20, 20, 0.935);
+            padding: 1px;
+            margin: 10px;
+            width: fit-content;
+            height: fit-content;
+            border-radius: 10px 10px 0px 0px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .intestazione{
+            background-color: #2A3A59;
+            margin: auto;
+            padding: 4px;
+            height: 45px;
+            width:100%;
+            border-radius: 10px 10px 0px 0px;
+        }
+        
+        #draggable{
+            position: absolute;
+        }
+
+        .intestazione .titolo{
+            color: white;
+        }
+
+        .barra{
+            background-color: #a6a198e6;
+            cursor: move;
+        }
+
+        .corpo{
+            background-color: #3C5473; 
+            resize: both;
+            overflow: auto;
+            padding: 4px;
+            min-width: 110px;
+            min-height: 30px;
+            width: 500px;
+            height: 300px; 
+            color: white;
+        }
+
+        .corpo .titolo{            
+            float: left;
+            clear: right;
+        }
+
+        .verde{
+            color: rgb(141, 235, 141);
+        }
+
+        .rosso{
+            color: #9760A6;
+        }
+
+        .grigio{
+            color:#A7D9D9;
+        }
+
+        .rosso:hover{
+            color: #7C3F8C;
+        }
+
+        .grigio:hover{
+            color: #538EA6;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="barra">
+        <div class="apriterminale">
+            <img src="icona.png" alt="Apri il terminale" height="30" onclick="creaTerminale()">
+        </div>
+    </div>
+    
+        <!-- parte eliminata-->
+        <!--
+        <div class="terminale" draggable="true" ondragstart="trascina(event)">
+            <div class="intestazione" align="left">
+                <i class="fa-solid fa-circle-xmark rosso"></i> <!-- Pulsante di chiusura 
+                <i class="fa-solid fa-circle-minus grigio"></i> <!-- Pulsante di minimizzazione 
+                <i class="fa-solid fa-circle-stop grigio"></i> <!-- Pulsante di massimizzazione 
+                <div class="titolo" align="center">ale@ubuntu: ~</div> <!-- Titolo del terminale 
+            </div>
+
+            <div class="corpo">
+                <div class="titolo">
+                    <div class="verde">ale@ubuntu:~$ </div> <!-- Prompt dei comandi 
+                </div>
+                <div class="comandi" contenteditable="true" align="left"></div> <!-- Input dei comandi 
+            </div>
+        </div>
+        -->
+
+    <script>
+        let contatoreTerminale = 1; // La variabile contatoreTerminale tiene traccia del numero di terminali creati. Viene inizializzata a 1.
+
+        let isSpostamentoAttivo = false;
+        let spostamentoOffsetX = 0;
+        let spostamentoOffsetY = 0;
+
+        document.getElementById("draggable").addEventListener("click", iniziaSpostamento);
+
+        function iniziaSpostamento(event) {
+            const terminale = event.target.closest(".terminale");
+            isSpostamentoAttivo = true;
+
+            const rect = terminale.getBoundingClientRect();
+            spostamentoOffsetX = event.clientX - rect.left;
+            spostamentoOffsetY = event.clientY - rect.top;
+
+            terminale.style.zIndex = "999";
+        }
+
+        terminale.addEventListener("mousemove", iniziaSpostamento);
+
+        function spostaDiv(event) {
+            if (isSpostamentoAttivo) {
+                const terminaleId = event.target.closest(".terminale").id;
+                const div = document.getElementById(terminaleId);
+                div.style.left = `${event.clientX - offsetX}px`;
+                div.style.top = `${event.clientY - offsetY}px`;
+            }
+        }
+
+
+        function creaTerminale() {
+            const contenitoreTerminale = document.createElement("div"); // Crea un nuovo elemento div che rappresenta il contenitore del terminale.
+            contenitoreTerminale.className = "terminale"; // Gli assegna una classe "terminale".
+            contenitoreTerminale.id = "terminale" + contatoreTerminale; // Gli assegna un ID univoco utilizzando la variabile contatoreTerminale.
+
+            // Crea gli elementi per l'intestazione del terminale.
+            const intestazione = document.createElement("div");
+            intestazione.className = "intestazione";
+            intestazione.id = "draggable";
+            intestazione.align = "left";
+
+            intestazione.addEventListener("click", iniziaSpostamento);
+
+            const pulsanteChiusura = document.createElement("i");
+            pulsanteChiusura.className = "fa-solid fa-circle-xmark rosso";
+
+            const pulsanteMinimizza = document.createElement("i");
+            pulsanteMinimizza.className = "fa-solid fa-circle-minus grigio";
+
+            const pulsanteMassimizza = document.createElement("i");
+            pulsanteMassimizza.className = "fa-solid fa-circle-stop grigio";
+
+            const titolo = document.createElement("div");
+            titolo.className = "titolo";
+            titolo.align = "center";
+            titolo.textContent = "ale@ubuntu: ~";
+
+            intestazione.appendChild(pulsanteChiusura);
+            intestazione.appendChild(pulsanteMinimizza);
+            intestazione.appendChild(pulsanteMassimizza);
+            intestazione.appendChild(titolo);
+
+            // Crea gli elementi per il corpo del terminale.
+            const corpo = document.createElement("div");
+            corpo.className = "corpo";
+
+            const titoloSezione = document.createElement("div");
+            titoloSezione.className = "titolo";
+
+            const testoVerde = document.createElement("div");
+            testoVerde.className = "verde";
+            testoVerde.textContent = "ale@ubuntu:~$ ";
+
+            titoloSezione.appendChild(testoVerde);
+
+            const inputComandi = document.createElement("div");
+            inputComandi.className = "comandi";
+            inputComandi.contentEditable = true;
+            inputComandi.align = "left";
+
+            corpo.appendChild(titoloSezione);
+            corpo.appendChild(inputComandi);
+
+            contenitoreTerminale.appendChild(intestazione);
+            contenitoreTerminale.appendChild(corpo);
+
+            document.body.appendChild(contenitoreTerminale);
+
+            contatoreTerminale++; // Incrementa il contatoreTerminale per l'ID del prossimo terminale.
+        }
+
+        function eseguiComando(idTerminale) {
+            const terminale = document.getElementById(idTerminale);
+            const inputComandi = terminale.querySelector(".comandi");
+
+            const comando = inputComandi.textContent.trim();
+            const argomenti = comando.split(" ");
+
+            if (argomenti.length >= 1) {
+                const nomeComando = argomenti[0];
+
+                switch (nomeComando) {
+                    case "stampare":
+                        if (argomenti.length >= 2){
+                            const parametro = argomenti[1];
+                            terminalOutput(idTerminale, parametro);
+                        }else 
+                            terminalOutput(idTerminale, "Il comando richiede due parametri");
+                        break;
+                    case "tempo":
+                        const data = new Date();
+                        const ora = data.getHours();
+                        const minuti = data.getMinutes();
+                        const secondi = data.getSeconds();
+                        const orario = ora + ":" + minuti + ":" + secondi;
+                        terminalOutput(idTerminale, orario);
+                        break;
+                    case "random":
+                        const numeroCasuale = Math.floor(Math.random() * 100);
+                        terminalOutput(idTerminale, "Numero casuale: " + numeroCasuale);
+                        break;
+                    default:
+                        terminalOutput(idTerminale, "Comando non riconosciuto");
+                        break;
+                }
+            } else {
+                terminalOutput(idTerminale, "Comando non valido");
+            }
+
+            inputComandi.textContent = "";
+        }
+
+        function terminalOutput(idTerminale, messaggio) {
+            const terminale = document.getElementById(idTerminale);
+            const inputComandi = terminale.querySelector(".comandi");
+
+            const output = document.createElement("div");
+            output.textContent = messaggio;
+
+            inputComandi.parentNode.insertBefore(output, inputComandi.nextSibling);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("keyup", function (event) {
+                if (event.key === "Enter") {
+                    const terminaleId = event.target.closest(".terminale").id;
+                    eseguiComando(terminaleId);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+

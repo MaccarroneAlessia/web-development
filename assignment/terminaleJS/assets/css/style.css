@@ -1,0 +1,117 @@
+body,
+html,
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #F2EDD0;
+    justify-content: center;
+    align-items: center;
+}
+
+.terminale {
+    background-color: rgba(26, 20, 20, 0.935);
+    padding: 1px;
+    margin: 10px;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 10px 10px 0px 0px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.intestazione {
+    background-color: #2A3A59;
+    margin: auto;
+    padding: 2px;
+    height: 25px;
+    width: 100%;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.intestazione.draggable {
+    cursor: move;
+}
+
+.intestazione .titolo {
+    color: #b4d8d8;
+}
+
+.barra {
+    background-color: #a6a198e6;
+    cursor: move;
+    display: flex;
+    align-items: center;
+}
+
+.nuovoTerminale {
+    flex-direction: column;
+    height: 30px;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.iconaT {
+    height: 27px;
+}
+
+.iconaT:hover {
+    height: 30px;
+    background-color: #4f525956;
+}
+
+.iconaOpen {
+    box-shadow: 2px 2px 4px #2A3A59;
+    height: 24px;
+}
+
+.corpo {
+    background-color: #3c5473c4;
+    resize: both;
+    overflow: auto;
+    padding: 4px;
+    min-width: 180px;
+    min-height: 50px;
+    width: 300px;
+    height: 150px;
+    color: white;
+}
+
+.corpo .comEs {
+    clear: right;
+    width: fit-content;
+    height: fit-content;
+}
+
+.corpo .titolo {
+    float: left;
+    clear: right;
+}
+
+.my-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.verde {
+    color: rgb(141, 235, 141);
+}
+
+.rosso {
+    color: #9760A6;
+}
+
+.grigio {
+    color: #A7D9D9;
+}
+
+.rosso:hover {
+    color: #7C3F8C;
+}
+
+.grigio:hover {
+    color: #538EA6;
+}

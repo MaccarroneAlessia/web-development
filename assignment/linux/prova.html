@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminale Linux</title>
+
+    <script src="https://kit.fontawesome.com/16585184a6.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+
+    <style>
+        /* Icone prese da https://boxicons.com/
+           <box-icon type='solid' name='x-circle'></box-icon> -> x cerchio - x-circle
+           -> cerchio meno - minus-circle
+           <box-icon name='square'></box-icon> -> quadrato ma senza cerchio :c
+        */
+
+        body, html, *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            background-color: #F2EDD0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .terminale{
+            background-color: rgba(26, 20, 20, 0.935);
+            padding: 1px;
+            margin: 10px;
+            width: fit-content;
+            height: fit-content;
+            border-radius: 10px 10px 0px 0px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .intestazione{
+            background-color: #2A3A59;
+            margin: auto;
+            padding: 2px;
+            height: 25px;
+            width:100%;
+            border-radius: 10px 10px 0px 0px;
+        }
+        
+        .intestazione.draggable {
+            cursor: move;
+        }
+
+        .intestazione .titolo{
+            color: #b4d8d8;
+        }
+
+        .barra{
+            background-color: #a6a198e6;
+            cursor: move;
+            display: flex;
+            align-items: center;
+        }
+
+        .nuovoTerminale {
+            flex-direction: column;
+            height: 30px;
+            align-items: center; /* Centra gli elementi verticalmente all'interno di ogni div nuovoTerminale */
+            margin-right: 10px; /* Aggiungi margine destro tra i div nuovoTerminale */
+        }
+
+        .iconaT{
+            height: 27px;
+        }
+        .iconaT:hover{
+            height: 30px;
+            background-color: #4f525956;
+        }
+
+        .corpo{
+            background-color: #3C5473; 
+            resize: both;
+            overflow: auto;
+            padding: 4px;
+            min-width: 180px;
+            min-height: 50px;
+            width: 300px;
+            height: 150px; 
+            color: white;
+        }
+
+        .corpo .comEs{
+            width: fit-content;
+            height: fit-content;
+        }
+
+        .corpo .titolo{            
+            float: left;
+            clear: right;
+        }
+
+        .corpo .comEs{
+            clear: right;
+        }
+
+        .verde{
+            color: rgb(141, 235, 141);
+        }
+
+        .rosso{
+            color: #9760A6;
+        }
+
+        .grigio{
+            color:#A7D9D9;
+        }
+
+        .rosso:hover{
+            color: #7C3F8C;
+        }
+
+        .grigio:hover{
+            color: #538EA6;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="barra">
+        <div class="nuovoTerminale">
+            <img src="icona.png" class="iconaT" onclick="creaTerminale()">
+        </div>
+        <div class="nuovoTerminale" id="tOpen"></div>
+    </div>
+
+    <script>
+        let contatoreTerminale = 0;
+        let isSpostamentoAttivo = false;
+        let spostamentoOffsetX = 0;
+        let spostamentoOffsetY = 0;
+
+        //La funzione creaTerminale() viene chiamata quando l'utente fa clic sull'icona per aprire un nuovo terminale. 
+        //Questa funzione crea gli elementi HTML che costituiscono il terminale, inclusa l'intestazione, il titolo e il corpo del terminale.
+        function creaTerminale() {
+            const terminale = document.createElement("div");
+            terminale.className = "terminale";
+            terminale.id = "terminale" + contatoreTerminale;
+
+            const intestazione = document.createElement("div");
+            intestazione.className = "intestazione draggable";
+            intestazione.addEventListener("mousedown", iniziaSpostamento);//secondo elemento una callback
+
+            const titolo = document.createElement("span");
+            titolo.className = "titolo";
+            titolo.textContent = " ale@ubuntu: ~ " + contatoreTerminale;
+
+            //icone di riduzione e ingrandimento nella barra dell'intestazione del terminale
+            //gli event listener per gestire i clic su queste icone
+            const minIcona = document.createElement("i");
+            minIcona.className = "fa-solid fa-circle-minus grigio";
+            minIcona.style.float = "right";
+            minIcona.style.cursor = "pointer";
+            minIcona.addEventListener("click", riduciTerminale);
+            /*minIcona.addEventListener("click", function(event) {
+                modificaDimensioneTerminale(event, "300px", "200px");
+            });*/
+
+            const maxIcona = document.createElement("i");
+            maxIcona.className = "fa-solid fa-circle-stop grigio";
+            maxIcona.style.float = "right";
+            maxIcona.style.cursor = "pointer";
+            maxIcona.addEventListener("click", function(event) {
+                modificaDimensioneTerminale(event, "100%", "100%");
+            });
+            //maxIcona.addEventListener("click", ingrandisciTerminale);
+
+            const chiudiIcona = document.createElement("i");
+            chiudiIcona.className = "fa-solid fa-circle-xmark rosso";
+            chiudiIcona.style.float = "right";
+            chiudiIcona.style.cursor = "pointer";
+            //evento di click per rimuovere il terminale quando l'icona viene cliccata 
+            chiudiIcona.addEventListener("click", chiudiTerminale);
+            /*chiudiIcona.onclick = function() {
+                terminale.remove();
+            };*/
+
+            intestazione.appendChild(titolo);
+            intestazione.appendChild(chiudiIcona);
+            intestazione.appendChild(maxIcona);
+            intestazione.appendChild(minIcona);
+            
+            const corpo = document.createElement("div");
+            corpo.className = "corpo";
+
+            const titoloSezione = document.createElement("div");
+            titoloSezione.className = "titolo";
+
+            const testoVerde = document.createElement("div");
+            testoVerde.className = "verde";
+            testoVerde.textContent = "ale@ubuntu:~$ ";
+
+            titoloSezione.appendChild(testoVerde);
+
+            const inputComandi = document.createElement("div");
+            inputComandi.className = "comandi";
+            //inputComandi.textContent = "scrivi un comando";
+            inputComandi.contentEditable = true;
+            inputComandi.align = "left";
+
+            const bufferComandi = document.createElement("div");
+            bufferComandi.className = "comEs";
+            bufferComandi.id = "comandi" + contatoreTerminale;
+            //bufferComandi.textContent = "comandi eseguiti";
+
+            corpo.appendChild(bufferComandi);
+            corpo.appendChild(titoloSezione);
+            corpo.appendChild(inputComandi);
+            
+
+            terminale.appendChild(intestazione);
+            terminale.appendChild(corpo);
+
+            document.body.appendChild(terminale);
+
+            // Seleziona l'elemento div con l'ID "tOpen"
+            const tOpen = document.getElementById("tOpen");
+
+            // Crea l'icona associata al terminale cliccabile
+            const icona = document.createElement("img");
+            icona.src = "iconaOpen.png";
+            icona.className = "iconaT";
+            icona.id = contatoreTerminale;
+            //icona.addEventListener("click", visTerminale(terminale.id));//non funziona
+            icona.addEventListener("click", function() {
+                visTerminale("terminale" + this.id);
+            });
+
+            // Aggiungi l'icona al div con l'ID "tOpen"
+            tOpen.appendChild(icona);
+
+            contatoreTerminale++;
+        }
+
+        //chiamata quando l'utente fa clic sull'intestazione del terminale per spostarlo
+        //memorizza la posizione iniziale del clic per consentire lo spostamento del terminale.
+        function iniziaSpostamento(event) {
+            const terminale = event.target.closest(".terminale");
+            isSpostamentoAttivo = true;
+
+            const rect = terminale.getBoundingClientRect();
+            spostamentoOffsetX = event.clientX - rect.left + 50 / 100 * windowHeight;//più il 50% perchè sposta col mouse nel body
+            spostamentoOffsetY = event.clientY - rect.top + 50 / 100 * windowHeight;
+
+            terminale.style.zIndex = "999";
+        }
+
+        //aggiorna la posizione del terminale in base alla posizione corrente del mouse.
+        function spostaDiv(event) {
+            if (isSpostamentoAttivo) {
+                const terminale = event.target.closest(".terminale");
+                terminale.style.left = `${event.clientX - spostamentoOffsetX}px`;
+                terminale.style.top = `${event.clientY - spostamentoOffsetY}px`;
+            }
+        }
+
+        //quando l'utente fa clic sull'icona di riduzione o ingrandimento del terminale. 
+        //modifica la dimensione del corpo del terminale in base ai parametri width e height. 
+        function modificaDimensioneTerminale(event, width, height) {
+            const terminale = event.target.closest(".terminale");
+            const corpo = event.target.closest(".terminale").querySelector(".corpo");
+            //corpo.style.width = width;
+            //corpo.style.height = height;
+            //Se i parametri contengono il simbolo "%", la dimensione viene calcolata in base alla percentuale della dimensione della finestra del browser.
+            if (width.includes("%")) {//cambiamo la dimensione del corpo del terminale 
+                const windowWidth = window.innerWidth;
+                const calculatedWidth = parseInt(width) / 100 * windowWidth;
+                corpo.style.width = calculatedWidth - 18 + "px";
+            } else {
+                corpo.style.width = width;
+            }
+            if (height.includes("%")) {
+                const windowHeight = window.innerHeight;
+                const calculatedHeight = parseInt(height) / 100 * windowHeight;
+                corpo.style.height = calculatedHeight - 72 + "px"; //meno barra e intestazione terminale
+            } else {
+                corpo.style.height = height;
+            }
+            //cambiamo la posizione del terminale 
+            terminale.style.left = "49.33%";
+            var topValue = "calc(50% + 7px)";
+            terminale.style.top = topValue;
+            terminale.style.transform = "translate(-50%, -50%)";
+        }
+
+        function chiudiTerminale(event){
+            const terminale = event.target.closest(".terminale");
+            const terminaleId = terminale.id;
+
+            terminale.remove();
+            //eliminare anche l'icona del terminale associata 
+            idIcona = terminaleId.replace(/[^0-9]?/g,"");
+            //alert(idIcona); // lascia solo i numeri
+            const iconaTerminale = document.getElementById(idIcona);
+            if (iconaTerminale) {
+                iconaTerminale.remove();
+            }
+        }
+
+        function riduciTerminale(event){
+            const terminale = event.target.closest(".terminale");
+            terminale.style.display = "none";
+        }
+
+        function visTerminale(terminaleId){
+            //se è chiuso lo apre se è aperto lo chiude
+            const terminale = document.getElementById(terminaleId);
+
+            // Verifica se il terminale è attualmente visibile o nascosto
+            if (terminale.style.display === "none") {
+                // Se è nascosto, lo apre
+                terminale.style.display = "block";
+            } else {
+                // Se è visibile, lo chiude
+                terminale.style.display = "none";
+            }
+        }
+
+        function ingrandisciTerminale(event) {//non usata
+            const terminale = event.target.closest(".terminale");
+            terminale.style.width = "100%";
+            terminale.style.height = "calc(100% - 40px)"; // 40px per la barra
+        }
+
+        //aggiunge gli event listener per il movimento del mouse e il rilascio del pulsante del mouse. 
+        //quando il mouse viene mosso, viene chiamata la funzione spostaDiv(event) per spostare il terminale. 
+        //Quando il pulsante del mouse viene rilasciato, viene impostata la variabile isSpostamentoAttivo su false per disattivare lo spostamento del terminale.
+        document.addEventListener("mousemove", spostaDiv);
+        document.addEventListener("mouseup", function() {
+            isSpostamentoAttivo = false;
+        });
+
+        //quando l'utente preme il tasto "Invio" dopo aver inserito un comando nel terminale. 
+        //ottiene il testo del comando, lo aggiunge all'output dei comandi e cancella l'input dei comandi per prepararlo per un nuovo comando.
+        function eseguiComando(idTerminale, idComandi) {
+            const terminale = document.getElementById(idTerminale);
+            const inputComandi = terminale.querySelector(".comandi");
+
+            const comando = inputComandi.textContent.trim();
+            const argomenti = comando.split(" ");
+
+            if (argomenti.length >= 1) {
+                const nomeComando = argomenti[0];
+
+                switch (nomeComando) {
+                    case "echo":
+                        if (argomenti.length >= 2){
+                            const parametro = argomenti[1];
+                            terminalOutput(idTerminale, parametro);
+                            //terminalOutput(idTerminale, idComandi, parametro);
+                        }else 
+                            terminalOutput(idTerminale, "Il comando richiede due parametri");
+                            //terminalOutput(idTerminale, idComandi, "Il comando richiede due parametri");
+                        break;
+                    case "orario":
+                        const data = new Date();
+                        const ora = data.getHours();
+                        const minuti = data.getMinutes();
+                        const secondi = data.getSeconds();
+                        const orario = ora + ":" + minuti + ":" + secondi;
+                        terminalOutput(idTerminale, orario);
+                        //terminalOutput(idTerminale, idComandi, orario);
+                        break;
+                    case "random":
+                        const numeroCasuale = Math.floor(Math.random() * 100);
+                        terminalOutput(idTerminale, "Numero casuale: " + numeroCasuale);
+                        //terminalOutput(idTerminale, idComandi, "Numero casuale: " + numeroCasuale);
+                        break;
+                    default:
+                        //terminalOutput(idTerminale, idComandi, "Comando non riconosciuto");
+                        terminalOutput(idTerminale, "Comando non riconosciuto");
+                        break;
+                }
+            } else {
+                terminalOutput(idTerminale, idComandi, "Comando non valido");
+            }
+
+            inputComandi.textContent = "";
+        }
+
+        function terminalOutput(idTerminale, messaggio) {
+            const terminale = document.getElementById(idTerminale);
+            const inputComandi = terminale.querySelector(".comandi");
+
+            //const outputContainer = document.createElement("div");
+            //outputContainer.classList.add("comEs");
+
+            const outputComandi = document.createElement("div");
+            outputComandi.classList.add("verde");
+            outputComandi.textContent = "ale@ubuntu:~$ " + inputComandi.textContent.trim();
+
+            const outputRisposta = document.createElement("div");
+            outputRisposta.textContent = messaggio;
+
+            const nuovoInput = document.createElement("div");
+            nuovoInput.classList.add("comandi");
+            nuovoInput.contentEditable = true;
+            nuovoInput.align = "left";
+
+            //outputContainer.appendChild(outputComandi);
+            //outputContainer.appendChild(outputRisposta);
+            //outputContainer.appendChild(nuovoInput);
+
+            const corpo = terminale.querySelector(".corpo");
+            //corpo.appendChild(outputContainer);
+            const bufferComandi = terminale.querySelector(".comEs");
+            bufferComandi.appendChild(outputComandi);
+            bufferComandi.appendChild(outputRisposta);
+            corpo.appendChild(nuovoInput);
+            
+
+            inputComandi.textContent = "";
+            inputComandi.focus();
+        }
+
+
+        /*
+        function terminalOutput(idTerminale, idComandi, messaggio) {//:CCC
+            const terminale = document.getElementById(idTerminale);
+            const inputComandi = terminale.querySelector(".comandi"); //scritta verde e vuoto 
+
+            const outputContainer = document.getElementById(idcomandi);//prima dell'input con i comandi già eseguiti
+
+            const outputComandi = document.createElement("div");
+            outputComandi.classList.add("verde");
+            outputComandi.textContent = "ale@ubuntu:~$ " + inputComandi.textContent.trim();//il metodo trim
+
+            const outputRisposta = document.createElement("div");
+            outputRisposta.textContent = messaggio;
+
+            const nuovoInput = document.createElement("div");
+            nuovoInput.classList.add("comandi");
+            nuovoInput.contentEditable = true;
+            nuovoInput.align = "left";
+
+            outputContainer.appendChild(outputComandi);
+            outputContainer.appendChild(outputRisposta);
+            //outputContainer.appendChild(document.createElement("br")); // Nuova riga - non funzionaaaa
+            outputContainer.appendChild(nuovoInput);
+
+            inputComandi.parentNode.insertBefore(outputContainer, inputComandi.nextSibling);
+
+            inputComandi.textContent = "";
+            inputComandi.focus();
+        }*/
+
+
+        //premendo il tasto "Invio", viene chiamata la funzione eseguiComando(idTerminale) per eseguire il comando nel terminale attivo.
+        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("keyup", function (event) {
+                if (event.key === "Enter") {
+                    const terminaleId = event.target.closest(".terminale").id;
+                    //const comandiId = event.target.closest(".comEs").id;
+                    const id = terminaleId.replace(/[^0-9]?/g,"");
+                    const comandiId = "comandi" + id;
+                    eseguiComando(terminaleId, comandiId);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
